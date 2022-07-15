@@ -1,5 +1,7 @@
 package com.sette.clipping.main.model;
 
+import jdk.jfr.DataAmount;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
