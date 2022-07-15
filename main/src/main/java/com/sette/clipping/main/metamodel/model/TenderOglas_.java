@@ -1,0 +1,82 @@
+package com.sette.clipping.main.metamodel.model;
+
+import com.sette.clipping.main.model.TenderOglas;
+import com.sette.clipping.main.model.TenderPrilog;
+import com.sette.clipping.main.models.PonistuvanjeNaPostapka;
+
+import java.util.Date;
+import javax.annotation.Generated;
+import javax.persistence.metamodel.ListAttribute;
+import javax.persistence.metamodel.SingularAttribute;
+import javax.persistence.metamodel.StaticMetamodel;
+
+@Generated(value="Dali", date="2019-01-17T09:53:12.661+0100")
+@StaticMetamodel(TenderOglas.class)
+public class TenderOglas_ {
+	public static volatile SingularAttribute<TenderOglas, String> entityIDnaOglas;
+	public static volatile SingularAttribute<TenderOglas, String> delivaNabavkaTabela;
+	public static volatile SingularAttribute<TenderOglas, String> kriteriumZaDodeluvanjeDogovorTabela;
+	public static volatile SingularAttribute<TenderOglas, String> brOglas;
+	public static volatile SingularAttribute<TenderOglas, String> urlNaOglas;
+	public static volatile SingularAttribute<TenderOglas, String> dogovorenOrgan;
+	public static volatile SingularAttribute<TenderOglas, String> PredmetNaDogovor;
+	public static volatile SingularAttribute<TenderOglas, String> vidNaDogovor;
+	public static volatile SingularAttribute<TenderOglas, String> vidNaPostapka;
+	public static volatile SingularAttribute<TenderOglas, Date> datumNaObjava;
+	public static volatile SingularAttribute<TenderOglas, Date> datumKraenRok;
+	public static volatile SingularAttribute<TenderOglas, Boolean> nabavkaDo5000EUR;
+	public static volatile SingularAttribute<TenderOglas, Boolean> soElektronskaAukcija;
+	public static volatile SingularAttribute<TenderOglas, Boolean> imaUsteDokumenti;
+	public static volatile SingularAttribute<TenderOglas, Boolean> nabavkataEDeliva;
+	public static volatile SingularAttribute<TenderOglas, String> address;
+	public static volatile SingularAttribute<TenderOglas, String> city;
+	public static volatile SingularAttribute<TenderOglas, String> internetAddress;
+	public static volatile SingularAttribute<TenderOglas, String> contactPerson;
+	public static volatile SingularAttribute<TenderOglas, String> email;
+	public static volatile SingularAttribute<TenderOglas, String> phoneFax;
+	public static volatile SingularAttribute<TenderOglas, String> podetalenOpis;
+	public static volatile SingularAttribute<TenderOglas, String> kriterum;
+	public static volatile SingularAttribute<TenderOglas, String> elektronskiSredstva;
+	public static volatile SingularAttribute<TenderOglas, String> additionalEauctionInfo;
+	public static volatile SingularAttribute<TenderOglas, String> alternativniPonudi;
+	public static volatile SingularAttribute<TenderOglas, String> postapkataSoSkratenirokovi;
+	public static volatile SingularAttribute<TenderOglas, String> referentnaNomenklatura;
+	public static volatile SingularAttribute<TenderOglas, String> vremetraenjeNaDogovorot;
+	public static volatile SingularAttribute<TenderOglas, String> avansnoPlakanje;
+	public static volatile SingularAttribute<TenderOglas, String> cenaZaPodiganjeTenderskaDokumentacija;
+	public static volatile SingularAttribute<TenderOglas, String> nacinIUsloviZaPlakanjeto;
+	public static volatile SingularAttribute<TenderOglas, String> denarskaSmetka;
+	public static volatile SingularAttribute<TenderOglas, String> deviznaSmetka;
+	public static volatile SingularAttribute<TenderOglas, String> minimumKriteriumEkonomska;
+	public static volatile SingularAttribute<TenderOglas, String> kraenRokZaPrasanja;
+	public static volatile SingularAttribute<TenderOglas, String> dokazuvanjeLicnaSostojbaEkonomskiOperatorDokumenti;
+	public static volatile SingularAttribute<TenderOglas, String> ramkovnaSpogodbaDetali;
+	public static volatile SingularAttribute<TenderOglas, String> sposobnostZaVrsenjeProfesionalnaDejnost;
+	public static volatile SingularAttribute<TenderOglas, String> ekonomskaIfinansiskaSostojba;
+	public static volatile SingularAttribute<TenderOglas, String> tehnickaIliProfesionalnaSposobnost;
+	public static volatile SingularAttribute<TenderOglas, String> standardiZaSistemiZakvalitet;
+	public static volatile SingularAttribute<TenderOglas, String> standadriZaUpravuvanjeSoZivotnaSredina;
+	public static volatile SingularAttribute<TenderOglas, String> periodNaVaznostNaPonudata;
+	public static volatile SingularAttribute<TenderOglas, String> mestoNaIsporaka;
+	public static volatile SingularAttribute<TenderOglas, String> garanciaAvans;
+	public static volatile SingularAttribute<TenderOglas, String> garancija;
+	public static volatile SingularAttribute<TenderOglas, String> garancijaIzvrsuvanje;
+	public static volatile SingularAttribute<TenderOglas, String> kategorijaNaDogovorenOrgan;
+	public static volatile SingularAttribute<TenderOglas, Boolean> izjavaZaSerioznost;
+	public static volatile SingularAttribute<TenderOglas, String> centralnoTelo;
+	public static volatile SingularAttribute<TenderOglas, String> grupnaNabavka;
+	public static volatile SingularAttribute<TenderOglas, String> zdruzuvanje;
+	public static volatile SingularAttribute<TenderOglas, String> javnoOtvaranje;
+	public static volatile SingularAttribute<TenderOglas, String> ramkovnaSpogodba;
+	public static volatile SingularAttribute<TenderOglas, String> dopolnitelniInformacii;
+	public static volatile SingularAttribute<TenderOglas, String> dodeluvanjeDogovor;
+	public static volatile SingularAttribute<TenderOglas, String> ponudiNajdocnaDo;
+	public static volatile ListAttribute<TenderOglas, TenderPrilog> listPrilog;
+	public static volatile ListAttribute<TenderOglas, PonistuvanjeNaPostapka> listPonistuvanja;
+	public static volatile SingularAttribute<TenderOglas, String> minimumKriteriumTehnicka;
+	public static volatile SingularAttribute<TenderOglas, String> procenetaVrednostBezDDV;
+	public static volatile SingularAttribute<TenderOglas, Long> procenetaVrednost;
+	public static volatile SingularAttribute<TenderOglas, String> opfateniDejnosti;
+	public static volatile SingularAttribute<TenderOglas, String> dopolnitelniInformaciiAdministrativni;
+	public static volatile SingularAttribute<TenderOglas, String> nezavisnaPonuda;
+}

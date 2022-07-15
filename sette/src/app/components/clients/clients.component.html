@@ -1,0 +1,492 @@
+<app-header></app-header>
+
+<div class="row">
+
+  <div class="col-md-5 mt-3">
+    <div class="flex-1 max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl">
+      <div class="div-1 flex items-center justify-center p-6 sm:p-12">
+        <div class=" w-full">
+          <h3 class="mb-3 text-xl font-semibold text-gray-700" style="text-align: center;">
+            Клиент
+          </h3>
+          <div class="flex items-center" style="margin-top:1%; margin-bottom:4%">
+            <mat-tab-group (selectedTabChange)="changeForms()" class="flex items-center" dynamicHeight>
+              <!-- Tab Dodadi Tag Start-->
+              <mat-tab label="Клип">
+                <div class="container" style="margin-top: 3%">
+                  <p>Последно пратен клип на датум во време <button class="btn btn-primary btn-sm"
+                      (click)="checkMailForm()">Измени</button>
+                  </p>
+                  <a href="">
+                    <p>Посети ја клиентската страна за овој клиент</p>
+                  </a>
+                  <div id="clientMails" *ngIf="showMailForm == true">
+                    <form autocomplete="off">
+                      <!--Clip START-->
+                      <p>Клип
+                        <mat-form-field appearance="outline" style="width: 50%; margin-left: 2%">
+                          <mat-label>Датум</mat-label>
+                          <input matInput [matDatepicker]="datepicker">
+                          <mat-datepicker-toggle matSuffix [for]="datepicker"></mat-datepicker-toggle>
+                          <mat-datepicker #datepicker>
+                            <mat-datepicker-actions>
+                              <button mat-button matDatepickerCancel>Откажи</button>
+                              <button mat-raised-button color="primary" matDatepickerApply>Избери</button>
+                            </mat-datepicker-actions>
+                          </mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field style="margin-left: 6%">
+                          <input matInput name="selected_time_A" [ngxMatTimepicker]="pickerA" placeholder="Време"
+                            readonly />
+                          <mat-icon matSuffix (click)="pickerA.open()">
+                            watch_later
+                          </mat-icon>
+                        </mat-form-field>
+                        <ngx-mat-timepicker color="primary" #pickerA></ngx-mat-timepicker>
+                      </p>
+                      <!--Clip END-->
+                      <!--Analytics START
+                      <p>Аналитика
+                        <mat-form-field appearance="outline" style="width: 40%; margin-left: 2%">
+                          <mat-label>Датум</mat-label>
+                          <input matInput [matDatepicker]="datepickerAnalytics">
+                          <mat-datepicker-toggle matSuffix [for]="datepickerAnalytics"></mat-datepicker-toggle>
+                          <mat-datepicker #datepickerAnalytics>
+                            <mat-datepicker-actions>
+                              <button mat-button matDatepickerCancel>Откажи</button>
+                              <button mat-raised-button color="primary" matDatepickerApply>Избери</button>
+                            </mat-datepicker-actions>
+                          </mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field style="margin-left: 6%">
+                          <input matInput name="selected_time_F" [ngxMatTimepicker]="pickerF" placeholder="Време"
+                            readonly />
+                          <mat-icon matSuffix (click)="pickerF.open()">
+                            watch_later
+                          </mat-icon>
+                        </mat-form-field>
+                        <ngx-mat-timepicker color="primary" #pickerF></ngx-mat-timepicker>
+                      </p>
+                      Analytics END-->
+                      <hr>
+                      <!--Valid Until START-->
+                      <p>Валиден до
+                        <mat-form-field appearance="outline" style="width: 40%; margin-left: 2%">
+                          <mat-label>Датум</mat-label>
+                          <input matInput [matDatepicker]="datepickerValidUntil">
+                          <mat-datepicker-toggle matSuffix [for]="datepickerValidUntil"></mat-datepicker-toggle>
+                          <mat-datepicker #datepickerValidUntil>
+                            <mat-datepicker-actions>
+                              <button mat-button matDatepickerCancel>Откажи</button>
+                              <button mat-raised-button color="primary" matDatepickerApply>Избери</button>
+                            </mat-datepicker-actions>
+                          </mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field style="margin-left: 6%">
+                          <input matInput name="selected_time_H" [ngxMatTimepicker]="pickerH" placeholder="Време"
+                            readonly />
+                          <mat-icon matSuffix (click)="pickerH.open()">
+                            watch_later
+                          </mat-icon>
+                        </mat-form-field>
+                        <ngx-mat-timepicker color="primary" #pickerH></ngx-mat-timepicker>
+                      </p>
+                      <!--Valid Until END-->
+                    </form>
+                  </div>
+                  <!-- Tags Dropzone Start -->
+                  <section dndDropzone (dndDrop)="onDrop($event)">
+                  <div class="container" style="background-color: white; height: 4rem; margin-bottom: 4%">
+                    <mat-chip-list #chipList>
+                    <div *ngFor="let tagID of tagsToAdd" style="margin-left: 1%; display: inline-block">
+                      <div *ngFor="let tags of tagsList">
+                        <div *ngIf="tags.tag_id == tagID">
+                            <mat-chip  [ngStyle]="{ 'background-color': tags.tag_color }" style="width: autp; height: auto">  
+                              {{tags.tag_name_c}}
+                             <button matChipRemove (click)="removeTagFromClient(tags.tag_id)">
+                                <mat-icon>cancel</mat-icon>
+                              </button> 
+                            </mat-chip>
+       <!--   <span [ngStyle]="{ 'background-color': tags.tag_color }" class="badge" style="color: black">{{tags.tag_name_c}}</span> -->
+        </div>
+        </div>
+    </div>
+  </mat-chip-list>
+                  </div>
+                </section>
+                <!-- Tags Dropzone End -->
+                  <form [formGroup]="clientForm" autocomplete="off">
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>Име</mat-label>
+                      <input formControlName="client_name" matInput>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>Корисничко Име</mat-label>
+                      <input formControlName="client_username" matInput>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>Лозинка</mat-label>
+                      <input type="password" formControlName="client_password" matInput>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>Е-маил</mat-label>
+                      <input formControlName="client_email" matInput>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>BCC</mat-label>
+                      <input formControlName="client_bcc" matInput>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>Наслов на е-маил</mat-label>
+                      <input formControlName="mail_title" matInput>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>PDF Наслов</mat-label>
+                      <input formControlName="pdf_title" matInput>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>Детален PDF</mat-label>
+                      <input formControlName="pdfDetail" matInput>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>Порака за празен е-маил</mat-label>
+                      <textarea rows="8" formControlName="customMessage" matInput>
+Почитувани,
+            
+Не беше објавена ниедна информација од Ваш интерес во македонските медиуми предмет на 
+мониторинг во изминатите 24 часа.
+            
+Срдечен поздрав, </textarea>
+                    </mat-form-field>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <mat-checkbox #followsClips (click)="print(followsClips.checked)" color="primary" fromControlName="follows_clips" matInput>Клип</mat-checkbox>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-checkbox #followsAnalytics color="primary" fromControlName="follows_analytics">Аналитика</mat-checkbox>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-checkbox #followsTenders color="primary" fromControlName="follows_tenders">Тендери</mat-checkbox>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <mat-checkbox #followsBankruptcies color="primary" fromControlName="follows_bankruptcies">Стечаи</mat-checkbox>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-checkbox #followsSales color="primary" fromControlName="follows_sales">Продажби</mat-checkbox>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-checkbox #followsNotifications color="primary" fromControlName="follows_notifications">Известувања</mat-checkbox>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <mat-checkbox #isTrial color="primary" fromControlName="is_trial">Пробен период</mat-checkbox>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-checkbox #isLatin color="primary" fromControlName="is_latin">Латиница</mat-checkbox>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-checkbox #showTags color="primary" fromControlName="is_tags">Прикажи тагови</mat-checkbox>
+                      </div>
+                    </div>
+                  </form>
+                  <button style="margin-top: 2%" *ngIf="editMode == false" mat-raised-button color="primary"
+                    (click)="addClient(followsClips.checked, followsAnalytics.checked, followsTenders.checked,
+                    followsBankruptcies.checked, followsSales.checked, followsNotifications.checked,
+                    isTrial.checked, isLatin.checked, showTags.checked)">Додади Клиент</button>
+                  <div *ngIf="editMode == true" style="margin-top: 2%">
+                    <button style="margin-left: 2%" mat-raised-button color="primary"
+                      (click)="editClient(clientID, followsClips.checked, followsAnalytics.checked, followsTenders.checked,
+                                          followsBankruptcies.checked, followsSales.checked, followsNotifications.checked,
+                                          isTrial.checked, isLatin.checked, showTags.checked); editMode = false">Измени</button>
+                    <button style="margin-left: 2%" mat-raised-button color="primary"
+                      (click)="resetForm(); editMode = false; tagsToAdd=[];">Откажи Измени</button>
+                    <button style="margin-left: 2%" mat-raised-button color="warn"
+                      (click)="deleteClient(clientID, clientName);">Избриши</button>
+                  </div>
+                </div>
+              </mat-tab>
+              <!-- Tab Dodadi Tag End-->
+              <mat-tab label="Бизнис Информатор">
+                <div class="container" style="margin-top: 3%">
+                  <p>Последно пратен клип на датум во време <button (click)="checkMailTenderForm()"
+                      class="btn btn-primary btn-sm">Измени</button>
+                  </p>
+                  <a href="">
+                    <p>Посети ја клиентската страна за овој клиент</p>
+                  </a>
+                  <div id="tenderMails" *ngIf="showMailTenderForm == true">
+                    <form autocomplete="off">
+                      <!--Tenders START-->
+                      <p>Тендер
+                        <mat-form-field appearance="outline" style="width: 50%; margin-left: 2%">
+                          <mat-label>Датум</mat-label>
+                          <input matInput [matDatepicker]="datepickerTender">
+                          <mat-datepicker-toggle matSuffix [for]="datepickerTender"></mat-datepicker-toggle>
+                          <mat-datepicker #datepickerTender>
+                            <mat-datepicker-actions>
+                              <button mat-button matDatepickerCancel>Откажи</button>
+                              <button mat-raised-button color="primary" matDatepickerApply>Избери</button>
+                            </mat-datepicker-actions>
+                          </mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field style="margin-left: 6%">
+                          <input matInput name="selected_time_B" [ngxMatTimepicker]="pickerB" placeholder="Време"
+                            readonly />
+                          <mat-icon matSuffix (click)="pickerB.open()">
+                            watch_later
+                          </mat-icon>
+                        </mat-form-field>
+                        <ngx-mat-timepicker color="primary" #pickerB></ngx-mat-timepicker>
+                      </p>
+                      <!--Tenders END-->
+                      <!--Notifications START-->
+                      <p>Известувања
+                        <mat-form-field appearance="outline" style="width: 40%; margin-left: 2%">
+                          <mat-label>Датум</mat-label>
+                          <input matInput [matDatepicker]="datepickerNotifications">
+                          <mat-datepicker-toggle matSuffix [for]="datepickerNotifications"></mat-datepicker-toggle>
+                          <mat-datepicker #datepickerNotifications>
+                            <mat-datepicker-actions>
+                              <button mat-button matDatepickerCancel>Откажи</button>
+                              <button mat-raised-button color="primary" matDatepickerApply>Избери</button>
+                            </mat-datepicker-actions>
+                          </mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field style="margin-left: 6%">
+                          <input matInput name="selected_time_C" [ngxMatTimepicker]="pickerC" placeholder="Време"
+                            readonly />
+                          <mat-icon matSuffix (click)="pickerC.open()">
+                            watch_later
+                          </mat-icon>
+                        </mat-form-field>
+                        <ngx-mat-timepicker color="primary" #pickerC></ngx-mat-timepicker>
+                      </p>
+                      <!--Notifications END-->
+                      <!--Sales START-->
+                      <p>Продажби
+                        <mat-form-field appearance="outline" style="width: 40%; margin-left: 2%">
+                          <mat-label>Датум</mat-label>
+                          <input matInput [matDatepicker]="datepickerSales">
+                          <mat-datepicker-toggle matSuffix [for]="datepickerSales"></mat-datepicker-toggle>
+                          <mat-datepicker #datepickerSales>
+                            <mat-datepicker-actions>
+                              <button mat-button matDatepickerCancel>Откажи</button>
+                              <button mat-raised-button color="primary" matDatepickerApply>Избери</button>
+                            </mat-datepicker-actions>
+                          </mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field style="margin-left: 6%">
+                          <input matInput name="selected_time_D" [ngxMatTimepicker]="pickerD" placeholder="Време"
+                            readonly />
+                          <mat-icon matSuffix (click)="pickerD.open()">
+                            watch_later
+                          </mat-icon>
+                        </mat-form-field>
+                        <ngx-mat-timepicker color="primary" #pickerD></ngx-mat-timepicker>
+                      </p>
+                      <!--Sales END-->
+                      <!--Bankruptcies START-->
+                      <p>Стечаи
+                        <mat-form-field appearance="outline" style="width: 40%; margin-left: 2%">
+                          <mat-label>Датум</mat-label>
+                          <input matInput [matDatepicker]="datepickerBankruptcies">
+                          <mat-datepicker-toggle matSuffix [for]="datepickerBankruptcies"></mat-datepicker-toggle>
+                          <mat-datepicker #datepickerBankruptcies>
+                            <mat-datepicker-actions>
+                              <button mat-button matDatepickerCancel>Откажи</button>
+                              <button mat-raised-button color="primary" matDatepickerApply>Избери</button>
+                            </mat-datepicker-actions>
+                          </mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field style="margin-left: 6%">
+                          <input matInput name="selected_time_E" [ngxMatTimepicker]="pickerE" placeholder="Време"
+                            readonly />
+                          <mat-icon matSuffix (click)="pickerE.open()">
+                            watch_later
+                          </mat-icon>
+                        </mat-form-field>
+                        <ngx-mat-timepicker color="primary" #pickerE></ngx-mat-timepicker>
+                      </p>
+                      <!--Bankruptcies END-->
+                      <hr>
+                      <!--Valid Tenders START-->
+                      <p>Валиден до (tenderi.mk)
+                        <mat-form-field appearance="outline" style="width: 40%; margin-left: 2%">
+                          <mat-label>Датум</mat-label>
+                          <input matInput [matDatepicker]="datepickerValidUntilTenders">
+                          <mat-datepicker-toggle matSuffix [for]="datepickerValidUntilTenders"></mat-datepicker-toggle>
+                          <mat-datepicker #datepickerValidUntilTenders>
+                            <mat-datepicker-actions>
+                              <button mat-button matDatepickerCancel>Откажи</button>
+                              <button mat-raised-button color="primary" matDatepickerApply>Избери</button>
+                            </mat-datepicker-actions>
+                          </mat-datepicker>
+                        </mat-form-field>
+                        <mat-form-field style="margin-left: 6%">
+                          <input matInput name="selected_time_G" [ngxMatTimepicker]="pickerG" placeholder="Време"
+                            readonly />
+                          <mat-icon matSuffix (click)="pickerG.open()">
+                            watch_later
+                          </mat-icon>
+                        </mat-form-field>
+                        <ngx-mat-timepicker color="primary" #pickerG></ngx-mat-timepicker>
+                      </p>
+                      <!--Valid Tenders END-->
+                    </form>
+                  </div>
+                  <form [formGroup]="clientForm" autocomplete="off">
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>Име</mat-label>
+                      <input formControlName="client_name" matInput>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>Корисничко Име</mat-label>
+                      <input formControlName="client_username" matInput>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>Лозинка</mat-label>
+                      <input type="password" formControlName="client_password" matInput>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>Е-маил</mat-label>
+                      <input formControlName="client_email" matInput>
+                    </mat-form-field>
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                      <mat-label>BCC</mat-label>
+                      <input formControlName="client_bcc" matInput>
+                    </mat-form-field>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <mat-checkbox color="primary" fromControlName="important_information" matInput>Клип
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-checkbox color="primary" fromControlName="important_information" matInput>Аналитика
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-checkbox color="primary" fromControlName="important_information" matInput>Тендери
+                        </mat-checkbox>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <mat-checkbox color="primary" fromControlName="important_information" matInput>Стечаи
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-checkbox color="primary" fromControlName="important_information" matInput>Продажби
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-checkbox color="primary" fromControlName="important_information" matInput>Известувања
+                        </mat-checkbox>
+                      </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-4">
+                        <mat-checkbox color="primary" fromControlName="important_information" matInput>Пробен период
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-checkbox color="primary" fromControlName="important_information" matInput>Латиница
+                        </mat-checkbox>
+                      </div>
+                      <div class="col-sm-4">
+                        <mat-checkbox color="primary" fromControlName="important_information" matInput>Прикажи тагови
+                        </mat-checkbox>
+                      </div>
+                    </div>
+                  </form>
+                  <button style="margin-top: 2%" *ngIf="editMode == false" mat-raised-button color="primary"
+                   >Додади Клиент</button>
+                  <div *ngIf="editMode == true" style="margin-top: 2%">
+                    <button style="margin-left: 2%" mat-raised-button color="primary"
+                      (click)="editMode = false">Измени</button>
+                    <button style="margin-left: 2%" mat-raised-button color="primary"
+                      (click)="resetForm(); editMode = false; tagsToAdd=[];">Откажи Измени</button>
+                    <button style="margin-left: 2%" mat-raised-button color="warn"
+                      (click)="deleteClient(clientID, clientName);">Избриши</button>
+                  </div>
+                </div>
+              </mat-tab>
+            </mat-tab-group>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+  <div class="col-sm-7">
+    <mat-chip-list #chipList>
+    <div style="display: inline-block; margin-left: 2%; margin-top: 2%" *ngFor="let tags of tagsList" [dndDraggable]="draggable.data"
+          (dndCopied)="onDraggableCopied($event,tags.tag_id)" (dndMoved)="onDraggableMoved($event)"
+          (dndCanceled)="onDragCanceled($event)" (dndEnd)="onDragEnd($event)">
+          <mat-chip  [ngStyle]="{ 'background-color': tags.tag_color }">  
+            {{tags.tag_name_c}}
+          </mat-chip>
+    </div>
+  </mat-chip-list>
+    <div class="flex items-center" style="margin-top:8%; margin-bottom:4%">
+      <button (click)="selectTrialClients()" mat-raised-button style="margin-left: 2%" color="primary">Означи
+        Пробни</button>
+      <button mat-raised-button style="margin-left: 2%" color="primary">Испрати пробни извештаи</button>
+      <button mat-raised-button style="margin-left: 2%" color="primary">Означи Активни</button>
+      <button mat-raised-button style="margin-left: 2%" color="primary">Испрати конечни извештаи</button>
+    </div>
+    <mat-form-field appearance="outline" style="width: 90%; margin-left: 2%">
+      <mat-label>Пребарај</mat-label>
+      <input type="next" name="searchString" [(ngModel)]="searchString" matInput>
+    </mat-form-field>
+    <div class="row" style="margin-left: 1%; margin-right: 1%;">
+      <div *ngFor="let client of clientList.slice().reverse() | filterAll: searchString" class="mt-1">
+        <!--<div class="card text-dark bg-light border-dark" style=" cursor: pointer" (click)="showOptions = true"> -->
+        <div *ngIf="clipForm == true && client.follows_clips == true">
+          <button style="height:35px;width:500px;"
+            (click)="editMode=true; clientID = client.client_id; loadClient(client.client_name,client.client_username,client.client_password,
+                                    client.client_email,client.client_bcc,client.mail_title,client.pdf_title, client.follows_clips,
+                                    client.follows_analytics, client.follows_tenders, client.follows_bankruptcies, client.follows_sales,
+                                    client.follows_notifications, client.is_trial, client.is_latin, client.is_tags); clientName = client.client_name"
+            class=" bg-sette col-sm-6">
+            <div class="flex items-center">
+              <mat-checkbox [checked]="trialClients.includes(client.client_id)" color="primary" class="ml-1"
+                style="margin-top: 1%"></mat-checkbox>
+              <div class="card-text ml-4 mt-1">{{ client.client_name }}</div>
+              <span class="badge bg-primary ml-5">Клип</span>
+            </div>
+          </button>
+        </div>
+        <div *ngIf="businessForm == true && client.follows_tenders == true">
+          <button style="height:35px;width:500px;"
+            (click)="editMode=true; clientID = client.client_id; loadClient(client.client_name,client.client_username,client.client_password,
+            client.client_email,client.client_bcc,client.mail_title,client.pdf_title, client.follows_clips,
+            client.follows_analytics, client.follows_tenders, client.follows_bankruptcies, client.follows_sales,
+            client.follows_notifications, client.is_trial, client.is_latin, client.is_tags); clientName = client.client_name"
+            class=" bg-sette col-sm-6">
+            <div class="flex items-center">
+              <mat-checkbox [checked]="trialClients.includes(client.client_id)" color="primary" class="ml-1"
+                style="margin-top: 1%"></mat-checkbox>
+              <div class="card-text ml-4 mt-1">{{ client.client_name }}</div>
+              <span style="margin-left: 45%" *ngIf="client.follows_clips == true" matBadge="K"
+                matBadgeOverlap="false"></span>
+              <span style="margin-left: 6%" *ngIf="client.follows_bankruptcies == true" matBadge="С"
+                matBadgeOverlap="false"></span>
+              <span style="margin-left: 6%" *ngIf="client.follows_tenders == true" matBadge="Т"
+                matBadgeOverlap="false"></span>
+              <span style="margin-left: 6%" *ngIf="client.follows_sales == true" matBadge="П"
+                matBadgeOverlap="false"></span>
+              <span style="margin-left: 6%" *ngIf="client.follows_notifications == true" matBadge="И"
+                matBadgeOverlap="false"></span>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

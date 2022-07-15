@@ -1,0 +1,251 @@
+<div class="row">
+  <div class="col-sm-2 bg-sette">
+    <img src="../assets/img/logo.png" class="object-cover" alt="SETTE" width="250">
+  </div>
+  <div class="col-sm-8 bg-sette">
+    <app-tenders-searchbar></app-tenders-searchbar>
+  </div>
+  <div class="col-sm-2 bg-sette">
+    <!--Dropdown list -->
+    <div class="btn-group float-right">
+      <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle dropdown-toggle-split mt-3 ml-5 mr-2">
+          <i class="fa fa-bars"></i>
+        </button>
+        <div class="dropdown-content">
+          <a href="/mediums">Медиум</a>
+          <a href="/tags">Таг</a>
+          <a href="/authors">Автор</a>
+          <a href="/clients">Клиент</a>
+          <a href="/users">Корисници</a>
+        </div>
+      </div>
+      <button (click)=logOut() *ngIf="authService.isUserLoggedIn()" class="btn btn-danger mt-3 mr-3 bg-sette"
+        style="float: right;" routerLink="/admin-login" title="Одјави се"><i class="fa fa-sign-out"
+          style="font-size:22px"></i></button>
+    </div>
+  </div>
+</div>
+
+
+<div class="row">
+  <div class="div-4 col-md-2" style="min-height: 700px; background-color: #d7dce0;">
+    <div class="form-group">
+      <select class="form-control w-1 mt-5 ml-2 mr-5" onchange="location = this.value;">
+        <option value="">Клип</option>
+        <option value="/tenders" selected="selected">Тендери</option>
+        <option value="/bankruptcies">Стечаи</option>
+        <option value="/sales">Продажби</option>
+        <option value="/notifications">Известувања</option>
+      </select>
+    </div>
+
+    <div *ngFor="let tag of tagsList">
+      <div *ngIf="tag.parent_tag == true && tag.tags_category_name == 'Тендери'">
+          <mat-checkbox (change)="addTagToTenderByCheck(tag.tag_id)" color="primary" style="margin-left: 4%;">
+              <span [dndDraggable]="draggable.data" (dndCopied)="onDraggableCopied($event,tag.tag_id)"
+                  (dndMoved)="onDraggableMoved($event)" (dndCanceled)="onDragCanceled($event)"
+                  (dndEnd)="onDragEnd($event)">{{tag.tag_name_c}}</span>
+          </mat-checkbox>
+          <mat-icon style="transform: rotate(90deg)" (click)="tagOpened(tag.tag_id);" style="cursor: pointer">
+              arrow_drop_down</mat-icon>
+      </div>
+      <div *ngFor="let childTag of tagsList">
+          <mat-checkbox (change)="addTagToTenderByCheck(childTag.tag_id)"
+              *ngIf="openedTags.includes(childTag.parent_tag_id) && childTag.parent_tag_id == tag.tag_id"
+              color="primary" style="margin-left: 8%">
+              <span [dndDraggable]="draggable.data" (dndCopied)="onDraggableCopied($event,childTag.tag_id)"
+                  (dndMoved)="onDraggableMoved($event)" (dndCanceled)="onDragCanceled($event)"
+                  (dndEnd)="onDragEnd($event)"> {{childTag.tag_name_c}} </span>
+          </mat-checkbox>
+      </div>
+  </div>
+
+  </div>
+
+
+  <div class="col-md-10">
+    <h2 style="text-align: center; margin-top: 1%;">Тендери</h2>
+    <hr>
+    <!--<p>Тендери:БРОЈ Прилози:БРОЈ Поништувања: БРОЈ</p>-->
+    <div class="alert alert-secondary" role="alert">
+      Тендери:БРОЈ Прилози:БРОЈ Поништувања: БРОЈ
+    </div>
+    <button mat-raised-button color="primary" (click)="checkTenderForm();">Нов Тендер</button>
+    <button mat-raised-button color="primary" style="margin-left: 1%" (click)="checkMailForm();">Прати Тендер</button>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div id="clientEmailForm" *ngIf="showMailForm == true">
+          <form style="margin-top: 2%; margin-left: -1%;">
+            <div class="col-md-6 mb-3 mt-3">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Име на клиент</mat-label>
+                <input matInput>
+              </mat-form-field>
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Маил на клиент</mat-label>
+                <input matInput>
+              </mat-form-field>
+              <button mat-raised-button color="primary">Прати Маил</button>
+            </div>
+          </form>
+
+        </div>
+        <div id="tenderForm" *ngIf="showTenderForm == true">
+
+          <form autocomplete="off" style="margin-top: 1%" [formGroup]="tenderForm">
+            <div class="row">
+              <div class="col-md-6 mb-3 mt-3">
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Тип на тендер</mat-label>
+                  <mat-select (selectionChange)="changeTenderType()" formControlName="tender_type" matInput>
+                    <mat-option value="Останато">Останато</mat-option>
+                    <mat-option value="Други огласи">Други огласи</mat-option>
+                    <mat-option value="Технички дијалог">Технички дијалог</mat-option>
+                  </mat-select>
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Медиум</mat-label>
+                  <input formControlName="tender_medium" matInput>
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Договорен орган</mat-label>
+                  <input formControlName="tender_publisher" matInput>
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Предмет на договор</mat-label>
+                  <input formControlName="tender_subject" matInput>
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>URL на оглас</mat-label>
+                  <input (input)="disableFormInput()" formControlName="tender_url" matInput>
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="width: 100%;">
+                  <mat-label>Слика</mat-label>
+                  <input (input)="disableFormInput()" formControlName="tender_image" matInput>
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="width: 49%;">
+                  <mat-label>Датум на објава</mat-label>
+                  <input matInput formControlName="tender_date" [matDatepicker]="datePublished">
+                  <mat-datepicker-toggle matSuffix [for]="datePublished"></mat-datepicker-toggle>
+                  <mat-datepicker #datePublished></mat-datepicker>
+                </mat-form-field>
+                <mat-form-field appearance="outline" style="width: 49%; margin-left: 2%">
+                  <mat-label>Краен Рок</mat-label>
+                  <input matInput formControlName="tender_expire" [matDatepicker]="dateExpire">
+                  <mat-datepicker-toggle matSuffix [for]="dateExpire"></mat-datepicker-toggle>
+                  <mat-datepicker #dateExpire></mat-datepicker>
+                </mat-form-field>
+                <button *ngIf="editMode == false;" mat-raised-button color="primary" (click)="addTender();">Додади
+                  тендер</button>
+                <div *ngIf="editMode == true">
+                  <button style="margin-left: 2%" mat-raised-button color="primary"
+                    (click)="editTender(tenderID); editMode = false">Измени</button>
+                  <button style="margin-left: 2%" mat-raised-button color="primary"
+                    (click)="this.resetForm(); editMode = false">Откажи Измени</button>
+                  <button style="margin-left: 2%" mat-raised-button color="warn"
+                    (click)="deleteTender(tenderID, tenderSubject);">Избриши</button>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <mat-form-field appearance="outline" style="width: 100%; margin-top: 2%">
+                  <mat-label>Опис</mat-label>
+                  <textarea (input)="disableFormInput()" rows=21 formControlName="tender_description"
+                    matInput></textarea>
+                </mat-form-field>
+              </div>
+            </div>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="col-sm-12">
+      <div id="tenderClients" *ngIf="showTenderClients == true">
+        <b>
+          <p>Клиенти:</p>
+        </b>
+        <p>Client name</p>
+      </div>
+    </div>
+
+    <!-- *ngFor="let tags of tagsList" 
+    <div [dndDraggable]="draggable.data" (dndCopied)="onDraggableCopied($event)" (dndMoved)="onDraggableMoved($event)"
+      (dndCanceled)="onDragCanceled($event)" (dndEnd)="onDragEnd($event)">
+      <!--[ngStyle]="{ 'background-color': tags.tag_color }"
+      <span class="badge" style="color: black">Hello</span>
+    </div> -->
+
+
+    <div id="tenderCards" style="margin-top: 4%; margin-left: 2%; margin-right: 2%;">
+      <!--Tender Cards START-->
+      <div *ngFor="let tender of tendersList.slice().reverse()">
+        <div class="card">
+          <div *ngIf="tenderCheck.checked">
+            <div class="card-header" style="height: 3rem; background-color: rgb(108, 216, 108);">
+              <section dndDropzone (dndDrop)="onDrop($event, tender.tender_id)">
+              {{transformDate(tender.tender_date)}} | <b
+                style="/*background-color: rgb(58, 58, 58);*/ color: white"><span
+                  class="badge bg-primary ml-1 mr-1">e-nabavki.gov.mk</span></b>
+              <span class="badge bg-secondary ml-1 mr-1">Tags</span>
+              <mat-icon style="cursor: pointer"
+                (click)="generatePDF('open', tender.tender_medium, tender.tender_publisher, tender.tender_subject)">
+                picture_as_pdf</mat-icon>
+              <mat-icon style="cursor: pointer">check</mat-icon>
+              <mat-icon style="cursor: pointer">close</mat-icon>
+              <mat-icon style="cursor: pointer" (click)="tenderClients(tender.tender_id, tender.tender_subject);">person</mat-icon>
+              <mat-icon style="cursor: pointer" (click)="editMode = true; tenderID = tender.tender_id; tenderSubject = tender.tender_subject; loadTender(tender.tender_type, tender.tender_medium, tender.tender_publisher, tender.tender_subject,
+            tender.tender_description, tender.tender_url, tender.tender_date, tender.tender_expire);">edit</mat-icon>
+          </section>
+            </div>
+          </div>
+          <div *ngIf="!tenderCheck.checked">
+            <div class="card-header" style="height: 3rem;">
+              <section dndDropzone (dndDrop)="onDrop($event, tender.tender_id)">
+              {{transformDate(tender.tender_date)}} | <b
+                style="/*background-color: rgb(58, 58, 58);*/ color: white"><span
+                  class="badge bg-primary ml-1 mr-1">e-nabavki.gov.mk</span></b>
+              <mat-icon style="cursor: pointer"
+                (click)="generatePDF('open', tender.tender_medium, tender.tender_publisher, tender.tender_subject)">
+                picture_as_pdf</mat-icon>
+              <mat-icon style="cursor: pointer">check</mat-icon>
+              <mat-icon style="cursor: pointer">close</mat-icon>
+              <mat-icon style="cursor: pointer" (click)="tenderClients(tender.tender_id, tender.tender_subject);">person</mat-icon>
+              <mat-icon style="cursor: pointer" (click)="editMode = true; tenderID = tender.tender_id; tenderSubject = tender.tender_subject;
+            loadTender(tender.tender_type, tender.tender_medium, tender.tender_publisher, tender.tender_subject,
+            tender.tender_description, tender.tender_url, tender.tender_date, tender.tender_expire);">edit</mat-icon>
+            </section>
+            </div>
+          </div>
+          <div class="card-body ml-3 mr-3" style="height: 4.5rem;">
+            <div class="flex items-center">
+              <div *ngFor="let tenderTags of tenderTagList">
+                  <div *ngIf="tender.tender_id == tenderTags.tender_id">
+                      <div *ngFor="let tags of tagsList">
+                          <div *ngIf="tags.tag_id == tenderTags.tag_id">
+                                  <span class="badge" style="color: black; cursor: pointer;"
+                                      (click)="removeTagFromTender(tenderTags.tender_tag_id)"
+                                      [ngStyle]="{ 'background-color': tags.tag_color }">{{tags.tag_name_c}}</span>
+                          </div>
+                      </div>
+                  </div>
+              </div>
+          </div>
+            <div style="cursor: pointer;">
+              <p style="font-size: 16px; margin-bottom: 0px;">
+                <mat-checkbox (click)="selectTender(tender.tender_id, tenderCheck.checked)" color="primary" matInput #tenderCheck></mat-checkbox> {{tender.tender_subject}}
+              </p>
+            </div>
+            <p style="font-size: 12px">{{tender.tender_publisher}}</p>
+          </div>
+        </div>
+      </div>
+      <!--Tender Cards END-->
+
+    </div>
+  </div>
+
+
+</div>

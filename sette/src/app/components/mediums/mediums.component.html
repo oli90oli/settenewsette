@@ -1,0 +1,75 @@
+<app-header></app-header>
+<div class="flex items-center">
+  <div class="row">
+    <div class="col-sm-4" style="margin-top: 10%;">
+      <div class="flex-1 max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl">
+        <div class="div-1 flex items-center justify-center p-6 sm:p-12">
+          <div class=" w-full">
+            <h3 class="mb-4 text-xl font-semibold text-gray-700">
+              ДОДАДЕТЕ МЕДИУМ
+            </h3>
+            <form [formGroup]="mediumForm">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Име на кирилица</mat-label>
+                <input formControlName="medium_name_cyrilic" matInput>
+              </mat-form-field>
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Име на латиница</mat-label>
+                <input formControlName="medium_name" matInput>
+              </mat-form-field> 
+            <mat-form-field appearance="outline" style="width: 100%;">
+               <mat-label>Избери Категорија</mat-label>
+               <mat-select formControlName="medium_type_id" matInput>
+                <mat-option>Избери Категорија</mat-option>
+                <div *ngFor="let mediumType of mediumTypeList">
+                <mat-option value="{{mediumType.medium_type_id}}">{{ mediumType.medium_type_name }}</mat-option>
+              </div>
+               </mat-select>
+             </mat-form-field>
+              </form>
+              <button *ngIf="editMode == false" mat-raised-button color="primary" (click)="addMedium()">Додади медиум</button>
+              <div *ngIf="editMode == true">
+              <button style="margin-left: 2%" mat-raised-button color="primary" (click)="editMedium(mediumID); editMode = false" >Измени</button> 
+              <button style="margin-left: 2%" mat-raised-button color="primary" (click)="resetForm(); editMode = false" >Откажи Измени</button> 
+              <button style="margin-left: 2%" mat-raised-button color="warn" (click)="deleteMedium(mediumID);">Избриши</button>
+            </div> 
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-sm-8"style="margin-top: 3%;">
+      <h3 style="text-align: center;">Медиуми</h3><br>
+      <div class="flex items-center">
+          <mat-form-field appearance="outline" style="width: 50%; margin-left: 0%; margin-top: 1%">
+            <mat-label>Пребарај</mat-label>
+            <input matInput type="next" name="searchString" [(ngModel)]="searchString">
+          </mat-form-field>
+      </div>
+      <br>
+
+      <div class="row mr-1">
+        <!-- <div *ngFor="let medium of mediumsList.slice().reverse() | filterAll: searchString" class="col-sm-12 col-md-6 col-lg-4 col-xl-3 text-sm"  style="margin-top: 1%; padding: 0px 2px;">
+          <button (click)="loadMedium(medium.medium_name, medium.medium_name_cyrilic, medium.medium_type_id.toString()); editMode = true; mediumID = medium.medium_id; mediumName = medium.medium_name_cyrilic" style="height:3rem;width: 100%;" class=" text-md bg-sette">
+            <p class="card-text text-md bg-sette mt-1">{{ medium.medium_name_cyrilic }} / {{ medium.medium_name }}</p>
+            <div *ngFor="let mediumType of mediumTypeList">
+              <div *ngIf="medium.medium_type_id == mediumType.medium_type_id">
+                <p><span class="mtype">{{ mediumType.medium_type_name }}</span></p>
+              </div>
+            </div>
+          </button>
+        </div> -->
+
+       <div *ngFor="let funMedium of funMediumList | filterAll: searchString" class="col-sm-12 col-md-6 col-lg-4 col-xl-3 text-sm"  style="margin-top: 1%; padding: 0px 2px;">
+        <!-- <div *ngIf="funMediumList && funMediumList.length > 0" class="grid" [ngClass]="'grid--'" infinite-scroll
+          [infiniteScrollDistance]="1" [infiniteScrollThrottle]="1500" (scrolled)="pageChange(page + 1)" [immediateCheck]="true"> -->
+          <button (click)="loadMedium(funMedium.medium_name, funMedium.medium_name_cyrilic, funMedium.medium_type_name); editMode = true; mediumID = funMedium.medium_id; mediumName = funMedium.medium_name_cyrilic; mediumType = funMedium.medium_type_name;" style="height:3rem;width: 100%;" class=" text-md bg-sette" aria-label="btn-medium">
+            <p class="card-text text-md bg-sette mt-1">{{ funMedium.medium_name_cyrilic }} / {{ funMedium.medium_name }}</p>
+              <p><span class="mtype">{{ funMedium.medium_type_name }}</span></p>
+              
+          </button>
+        </div>
+        </div> 
+      </div>
+    </div>
+  </div>

@@ -1,0 +1,306 @@
+<div class="row">
+    <div class="col-sm-2 bg-sette">
+        <img src="../assets/img/logo.png" class="object-cover" alt="SETTE" width="250">
+    </div>
+    <div class="col-sm-8 bg-sette">
+        <header class="z-10 py-4 ml-40% mt-3" style="margin-left:25%">
+            <div class="container flex items-center justify-between h-full px-6 mx-auto text-skyblue-600">
+                <!-- Search input -->
+                <div class="flex justify-start">
+                    <div class="relative w-full max-w-xl mr-3  focus-within:text-skyblue-500">
+                        <div class="absolute inset-y-0 flex items-center pl-2 bg-sette">
+                            <label class="flex items-center pl-2 bg-sette ">
+                                <label class="flex items-center pl-2">
+                                    <span class="mr-1">Од</span>
+                                    <mat-form-field>
+                                        <input #from matInput [matDatepicker]="datepickerRef" name="datepicker" ngModel
+                                            #dateCtrl="ngModel" required readonly />
+                                        <mat-datepicker-toggle [for]="datepickerRef" matSuffix></mat-datepicker-toggle>
+                                        <mat-datepicker #datepickerRef></mat-datepicker>
+                                        <mat-error *ngIf="dateCtrl.errors?.[required] && deptCtrl.touched">Choose a Date
+                                        </mat-error>
+                                    </mat-form-field>
+                                </label>
+                                <label class="flex items-center pl-2">
+                                    <span class="ml-3 mr-1">До</span>
+                                    <mat-form-field>
+                                        <input #to matInput [matDatepicker]="datepickerRef1" name="datepicker1" ngModel
+                                            #dateCtrl="ngModel" required readonly />
+                                        <mat-datepicker-toggle [for]="datepickerRef1" matSuffix></mat-datepicker-toggle>
+                                        <mat-datepicker #datepickerRef1></mat-datepicker>
+                                        <mat-error *ngIf="dateCtrl.errors?.[required] && deptCtrl.touched">Choose a Date
+                                        </mat-error>
+                                    </mat-form-field>
+                                </label>
+                                <button (click)="filterByDate(from.value, to.value)" style="margin-left: 2%; "
+                                    type="button"
+                                    class="flex items-center justify-between w-full mr-2 px-2 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-skyblue-600 border border-transparent rounded-lg active:bg-skyblue-600 hover:bg-skyblue-700 focus:outline-none focus:shadow-outline-skyblue">
+                                    Прикажи
+                                </button>
+                                <button (click)="resetFilter(); from.value = ''; to.value = '';"
+                                    style="margin-left: 0%; " type="button"
+                                    class="flex items-center justify-between w-full mr-2 px-6 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-skyblue-600 border border-transparent rounded-lg active:bg-skyblue-600 hover:bg-skyblue-700 focus:outline-none focus:shadow-outline-skyblue">
+                                    Освежи
+                                </button>
+                                <label class="flex items-ri pl-2 ml-3">
+                                    <div>Пребарај </div>
+                                    <div style="margin-left: 5%">
+                                        <input type="next" name="searchString" [(ngModel)]="searchString">
+                                    </div>
+                                </label>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </header>
+    </div>
+
+    <div class="col-sm-2 bg-sette">
+        <!--Dropdown list -->
+        <div class="btn-group float-right">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle dropdown-toggle-split mt-3 ml-5 mr-2">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="/mediums">Медиум</a>
+                    <a href="/tags">Таг</a>
+                    <a href="/authors">Автор</a>
+                    <a href="/clients">Клиент</a>
+                    <a href="/users">Корисници</a>
+                </div>
+            </div>
+
+            <button (click)=logOut() *ngIf="authService.isUserLoggedIn()" class="btn btn-danger mt-3 mr-3"
+                style="float: right;" routerLink="/admin-login" title="Одјави се"><i class="fa fa-sign-out"
+                    style="font-size:22px"></i></button>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="row">
+    <div class="div-4 col-md-2" style="min-height: 700px">
+        <div class="form-group">
+            <select class="form-control w-1 mt-5 ml-2 mr-5" onchange="location = this.value;">
+                <option value="">Клип</option>
+                <option value="/tenders">Тендери</option>
+                <option value="/bankruptcies" selected="selected">Стечаи</option>
+                <option value="/sales">Продажби</option>
+                <option value="/notifications">Известувања</option>
+            </select>
+        </div>
+    </div>
+    <div class="col-md-10">
+        <h2 style="text-align: center; margin-top: 1%;">Стечаи</h2>
+        <hr>
+        <div *ngIf="showBankruptciesForm == false">
+            <button (click)="checkBankruptciesForm()" style="margin-left: 1%" mat-raised-button color="primary">Нов
+                Стечај</button>
+            <button (click)="deleteMultipleBankruptcies()" style="margin-left: 1%" mat-raised-button
+                color="warn">Избриши Селектирани</button>
+        </div>
+        <div *ngIf="showBankruptciesForm == true">
+            <button (click)="checkBankruptciesForm()" style="margin-left: 1%" mat-raised-button
+                color="primary">Сокриј</button>
+            <button (click)="deleteMultipleBankruptcies()" style="margin-left: 1%" mat-raised-button
+                color="warn">Избриши Селектирани</button>
+        </div>
+
+
+        <div class="container-fluid">
+            <div class="row">
+                <div *ngIf="showBankruptciesForm == true">
+                    <form autocomplete="off" style="margin-top: 1%" [formGroup]="bankruptciesForm">
+                        <div class="row">
+                            <div class="col-md-6 mb-3 mt-3">
+                                <mat-form-field appearance="outline" style="width: 100%;">
+                                    <mat-label>Име</mat-label>
+                                    <input formControlName="bankruptcy_name" matInput>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" style="width: 100%;">
+                                    <mat-label>ЕМБС</mat-label>
+                                    <input formControlName="bankruptcy_embs" matInput>
+                                </mat-form-field>
+                                <mat-form-field appearance="outline" style="width: 100%;">
+                                    <mat-label>URL</mat-label>
+                                    <input formControlName="bankruptcy_url" matInput>
+                                </mat-form-field>
+                                <input hidden type="file" id="file" (change)="onFileSelected()" #fileInput>
+                                <mat-form-field appearance="outline" style="width: 90%;">
+                                    <mat-label>Слика</mat-label>
+                                    <input formControlName="bankruptcy_image" matInput>
+                                </mat-form-field>
+                                <button (click)="fileInput.click()" style="margin-left: 4%;" mat-mini-fab
+                                    color="primary">
+                                    <mat-icon>attach_file</mat-icon>
+                                </button>
+                                <mat-form-field appearance="outline" style="width: 100%;">
+                                    <mat-label>Фаза на стечај</mat-label>
+                                    <mat-select formControlName="bankruptcy_phase" matInput>
+                                        <mat-option value="Претстечај (Претходна постапка)">Претстечај (Претходна
+                                            постапка)</mat-option>
+                                        <mat-option value="Собрание на доверители">Собрание на доверители</mat-option>
+                                        <mat-option value="Депонирање во стечајното досие">Депонирање во стечајното
+                                            досие</mat-option>
+                                        <mat-option value="Проценка на имот">Проценка на имот</mat-option>
+                                        <mat-option value="Продажба на имот">Продажба на имот</mat-option>
+                                        <mat-option value="Отворање на стечајна постапка">Отворање на стечајна постапка
+                                        </mat-option>
+                                        <mat-option value="Отворање и заклучување на стечајна постапка">Отворање и
+                                            заклучување на стечајна постапка</mat-option>
+                                        <mat-option value="Заклучување на стечајна постапка">Заклучување на стечајна
+                                            постапка</mat-option>
+                                        <mat-option value="Запирање на претходна постапка">Запирање на претходна
+                                            постапка</mat-option>
+                                        <mat-option value="Набавка на услуги/стоки">Набавка на услуги/стоки</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                                <!--    <mat-form-field appearance="outline"  style="width: 49%;">
+                              <mat-label>Датум на објава</mat-label>
+                              <input matInput formControlName="sales_date" [matDatepicker]="datePublished">
+                              <mat-datepicker-toggle matSuffix [for]="datePublished"></mat-datepicker-toggle>
+                              <mat-datepicker #datePublished></mat-datepicker>
+                            </mat-form-field> -->
+                                <mat-form-field appearance="outline" style="width: 49%; margin-left: 0%">
+                                    <mat-label>Датум на стечај</mat-label>
+                                    <input matInput formControlName="bankruptcy_date" [matDatepicker]="dateExpire">
+                                    <mat-datepicker-toggle matSuffix [for]="dateExpire"></mat-datepicker-toggle>
+                                    <mat-datepicker #dateExpire></mat-datepicker>
+                                </mat-form-field>
+                                <br>
+                                <button *ngIf="editMode == false;" mat-raised-button color="primary"
+                                    (click)="addBankruptcy()">Додади стечај</button>
+                                <div *ngIf="editMode == true">
+                                    <button (click)="editMode = false; editBankruptcy(bankruptcyID);"
+                                        style="margin-left: 2%" mat-raised-button color="primary">Измени</button>
+                                    <button (click)="editMode = false; resetForm();" style="margin-left: 2%"
+                                        mat-raised-button color="primary">Откажи Измени</button>
+                                    <button (click)="editMode = false ; deleteBankruptcy(bankruptcyID)"
+                                        style="margin-left: 2%" mat-raised-button color="warn">Избриши</button>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="mb-3 mt-5">
+                                        <mat-form-field appearance="outline" style="width: 100%;">
+                                            <mat-label>Текст</mat-label>
+                                            <textarea rows="16" formControlName="customMessage" matInput></textarea>
+                                        </mat-form-field>
+                                    </div>
+                                </div>
+                                <!--div class="col-md-6">
+                                <mat-form-field appearance="outline" style="width: 100%; margin-top: -1%;">
+                                    <mat-label>Опис</mat-label>
+                                    <textarea rows=26 formControlName="bankruptcy_description" matInput></textarea>
+                                </mat-form-field>
+                            </div-->
+                            </div>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="col-md-12" style="margin-top: 4%">
+                    <div *ngIf="filterMode == false">
+                        <div *ngFor="let bankruptcy of bankruptciesList.reverse().slice() | filterAll: searchString"
+                            class="container mt-2">
+                            <div class="card bg-secondary">
+                                <div class="card-header text-white" style="height: 3rem; width: 100%;">
+                                    <b>
+                                        <div class="card-title">
+                                            <div class="row">
+                                                <div class="col-sm-8" style="margin-left: -1%">
+                                                    Датум на стечај: {{transformDate(bankruptcy.bankruptcy_date)}}
+                                                </div>
+                                                <div class="col-sm-1" style="margin-left: -24%">
+                                                    <mat-icon style="cursor: pointer"
+                                                        (click)="generatePDF('open', bankruptcy.bankruptcy_name,
+                                          bankruptcy.bankruptcy_embs, bankruptcy.bankruptcy_phase, bankruptcy.bankruptcy_description);"
+                                                        title="Генерирај PDF документ">picture_as_pdf</mat-icon>
+                                                </div>
+                                                <div class="col-sm-1" style="margin-left: -5%">
+                                                </div>
+                                                <div class="col-sm-1" style="margin-left: 38%">
+                                                    <mat-icon (click)=" showBankruptciesForm = true; editMode = true; bankruptcyID = bankruptcy.bankruptcy_id;
+                                        loadBankruptcy(bankruptcy.bankruptcy_name,bankruptcy.bankruptcy_embs,bankruptcy.bankruptcy_date,bankruptcy.bankruptcy_url,bankruptcy.bankruptcy_image,
+                                        bankruptcy.bankruptcy_description,bankruptcy.bankruptcy_phase); "
+                                                        style="cursor: pointer">edit</mat-icon>
+                                                    <mat-icon (click)="deleteBankruptcy(bankruptcy.bankruptcy_id)"
+                                                        style="margin-left: 15%; cursor: pointer">delete</mat-icon>
+                                                </div>
+                                                <div class="col-sm-1" style="margin-left: 2%">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </b>
+                                </div>
+                                <div class="card-body" style="background-color: white">
+                                    <div class="flex items-center">
+                                        <input (click)="selectBankruptcies(bankruptcy.bankruptcy_id)"
+                                            class="form-check-input ml-1" type="checkbox" value="" id="defaultCheck1">
+                                        <div class="ml-4">
+                                            <b>{{ bankruptcy.bankruptcy_phase }}</b>
+                                        </div>
+                                    </div>
+                                    <div class="card-text">
+                                        {{ bankruptcy.bankruptcy_name }}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                    <div *ngIf="filterMode == true">
+                        <div *ngFor="let bankruptcy of filteredList.reverse().slice() | filterAll: searchString"
+                            class="container mt-2">
+                            <div class="card bg-secondary">
+                                <div class="card-header text-white" style="height: 3rem; width: 100%;">
+                                    <b>
+                                        <div class="card-title">
+                                            <div class="row">
+                                                <div class="col-sm-8" style="margin-left: -1%">
+                                                    Датум на стечај: {{transformDate(bankruptcy.bankruptcy_date)}}
+                                                </div>
+                                                <div class="col-sm-1" style="margin-left: -24%">
+                                                    <mat-icon style="cursor: pointer"
+                                                        (click)="generatePDF('open', bankruptcy.bankruptcy_name,
+                                              bankruptcy.bankruptcy_embs, bankruptcy.bankruptcy_phase, bankruptcy.bankruptcy_description);"
+                                                        title="Генерирај PDF документ">picture_as_pdf</mat-icon>
+                                                </div>
+                                                <div class="col-sm-1" style="margin-left: -5%">
+                                                </div>
+                                                <div class="col-sm-1" style="margin-left: 38%">
+                                                    <mat-icon (click)=" showBankruptciesForm = true; editMode = true; bankruptcyID = bankruptcy.bankruptcy_id;
+                                            loadBankruptcy(bankruptcy.bankruptcy_name,bankruptcy.bankruptcy_embs,bankruptcy.bankruptcy_date,bankruptcy.bankruptcy_url,bankruptcy.bankruptcy_image,
+                                            bankruptcy.bankruptcy_description,bankruptcy.bankruptcy_phase); "
+                                                        style="cursor: pointer">edit</mat-icon>
+                                                    <mat-icon (click)="deleteBankruptcy(bankruptcy.bankruptcy_id)"
+                                                        style="margin-left: 15%; cursor: pointer">delete</mat-icon>
+                                                </div>
+                                                <div class="col-sm-1" style="margin-left: 2%">
+
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </b>
+                                </div>
+                                <div class="card-body" style="background-color: white">
+                                    <div class="flex items-center">
+                                        <input (click)="selectBankruptcies(bankruptcy.bankruptcy_id)"
+                                            class="form-check-input ml-1" type="checkbox" value="" id="defaultCheck1">
+                                        <div class="ml-4">
+                                            <b>{{ bankruptcy.bankruptcy_phase }}</b>
+                                        </div>
+                                    </div>
+                                    <div class="card-text">
+                                        {{ bankruptcy.bankruptcy_name }}
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>

@@ -1,0 +1,182 @@
+<!--Clip menu-->
+<div class="grid gap-6 mb-8" style="font-size: 10px;">
+    <div class="min-w-0 p-3 bg-white rounded-lg shadow-xs">
+        <form [formGroup]="clipForm">
+            <div class="container">
+                <div class="row">
+                    <label class="flex items-top pl-2">
+
+                        <div class="col-md-6">
+                            <label class="flex items-center">
+                                <mat-form-field appearance="outline" style="width: 100%;">
+                                    <mat-label>Избери медиум</mat-label>
+                                    <mat-select (input)="searchMedium()" formControlName="medium_id" matInput>
+                                     <mat-option>Избери медиум</mat-option>
+                                     <div *ngFor="let medium of mediumsList">
+                                     <mat-option value="{{medium.medium_id}}">{{ medium.medium_name_cyrilic }}</mat-option>
+                                   </div>
+                                    </mat-select>
+                                  </mat-form-field>
+                             <!--   <select (input)="searchMedium()" [(ngModel)]="mediumTitle"
+                                    (change)="selectChangeHandler($event)"
+                                    class="block text-sm w-full form-select focus:border-skyblue-400 focus:outline-none focus:shadow-outline-skyblue">
+                                    <option selected>Избери Медиум</option>
+                                    <option *ngFor="let medium of mediumsList">
+                                        {{medium.medium_name_cyrilic}}
+                                    </option>
+                                </select> 
+                                <span class="ml-1 mr-2">Датум</span>
+                                <input type="date" [(ngModel)]="clips.date_of_clip" class="form-control" id="dateClip"
+                                    name="dateClip" required #name="ngModel"> -->
+                            </label>
+                            <label class="flex items-center;">
+                                <mat-form-field appearance="outline"  style="width: 100%; margin-right: 2%">
+                                    <mat-label>Датум на објава</mat-label>
+                                    <input matInput formControlName="created_at" [matDatepicker]="datePublished">
+                                    <mat-datepicker-toggle matSuffix [for]="datePublished"></mat-datepicker-toggle>
+                                    <mat-datepicker #datePublished></mat-datepicker>
+                                  </mat-form-field>
+                                  <mat-form-field appearance="outline"  style="width: 100%;">
+                                    <mat-label>Датум на клип</mat-label>
+                                    <input matInput formControlName="date_of_clip" [matDatepicker]="dateClip">
+                                    <mat-datepicker-toggle matSuffix [for]="dateClip"></mat-datepicker-toggle>
+                                    <mat-datepicker #dateClip></mat-datepicker>
+                                  </mat-form-field>
+                            </label>
+                          <!--  <input type="text" [(ngModel)]="clips.clip_title" class="form-control" id="clipTitle"
+                                name="clipTitle" required #name="ngModel" placeholder="Наслов"> -->
+                                <mat-form-field appearance="outline" style="width: 100%;">
+                                    <mat-label>Наслов</mat-label>
+                                    <input formControlName="clip_title" matInput>
+                                  </mat-form-field>
+                                  <mat-form-field *ngIf="translateMode == true" appearance="outline" style="width: 100%;">
+                                    <mat-label>Наслов на англиски</mat-label>
+                                    <input formControlName="clip_title_english" matInput>
+                                  </mat-form-field>
+                          <!--  <textarea #hi (keydown.control.q)="getSelectedKeyword($event, bye.value)"
+                                (input)="searchKeyword(hi.value, bye.value)"
+                                (click)="searchKeyword(hi.value, bye.value)" class="form-control mt-2" rows="9"
+                                id="clipText" [(ngModel)]="clips.clip_text" name="clipText" required #name="ngModel"
+                                placeholder="Текст"></textarea> -->
+                                <mat-form-field appearance="outline" style="width: 100%;">
+                                    <mat-label>Текст</mat-label>
+                                    <textarea (keydown.control.q)="showKeywords()" (input)="generateBrief()" rows=5 formControlName="clip_text" matInput></textarea>
+                                  </mat-form-field>
+                                  <mat-form-field appearance="outline" style="width: 100%;">
+                                    <mat-label>Слика</mat-label>
+                                    <input formControlName="clip_image_url" matInput>
+                                  </mat-form-field>
+                            <div class="flex items-center">
+                                <div class="form-check">
+                                 <!--   <input class="form-check-input" type="checkbox" value=""
+                                        id="clipImportantInformation">
+                                    <label class="form-check-label mt-1 mr-5" for="clipImportantInformation">
+                                        Важна Информација
+                                    </label> -->
+                                    <mat-checkbox color="primary" #importantInformation fromControlName="important_information" matInput>Важна информација</mat-checkbox>
+                                </div>
+                             <!--   <button id="submit" type="submit" class="btn btn-primary mt-2 mb-3 ml-5">Зачувај
+                                    Клип</button> -->
+                                    <button style="margin-left: 2%" *ngIf="editMode == false && translateMode == false" mat-raised-button color="primary" (click)="addClip(importantInformation.checked);">Додади клип</button>
+                                    <div *ngIf="translateMode == true">
+                                        <button style="margin-left: 2%" mat-raised-button color="primary" (click)="translateMode = false; translateClip(clipIDForm)" >Преведи</button>
+                                        <button style="margin-left: 2%" mat-raised-button color="primary" (click)="translateMode = false; resetForm()" >Откажи превод</button>   
+                                    </div>
+                                    <div *ngIf="editMode == true">
+                                        <button style="margin-left: 2%" mat-raised-button color="primary" (click)="editMode = false; editClip(clipIDForm)" >Измени</button> 
+                                        <button style="margin-left: 2%" mat-raised-button color="primary" (click)="editMode = false; resetForm()" >Откажи Измени</button> 
+                                        <button style="margin-left: 2%" mat-raised-button color="warn" (click)="editMode = false; deleteClip(clipIDForm)" >Избриши</button> 
+                                    </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6">
+                            <div class="form-group">
+                            <!--    <textarea class="form-control" rows="4" id="clipBrief" [(ngModel)]="clips.brief"
+                                    name="clipBrief" required #name="ngModel" placeholder="Бриф">
+                                </textarea> -->
+                                <mat-form-field appearance="outline" style="width: 100%;">
+                                    <mat-label>Бриф</mat-label>
+                                    <textarea maxlength="250" rows=5 formControlName="brief" matInput></textarea>
+                                  </mat-form-field>
+                                  <mat-form-field *ngIf="translateMode == true" appearance="outline" style="width: 100%;">
+                                    <mat-label>Бриф на англиски</mat-label>
+                                    <textarea rows=3 formControlName="brief_english" matInput></textarea>
+                                  </mat-form-field>
+                               
+                            <!--   <select (input)="searchAuthor()" [(ngModel)]="authorTitle"
+                                    (change)="selectChangeHandler($event)"
+                                    class="block text-sm mt-1 form-select focus:border-skyblue-400 focus:outline-none focus:shadow-outline-skyblue ">
+                                    <option selected>Избери Автор</option>
+                                    <option *ngFor="let author of authorsList">
+                                        {{author.full_name_c}}
+                                    </option>
+                                </select> -->
+                                <mat-form-field appearance="outline" style="width: 100%;">
+                                    <mat-label>Избери автори</mat-label>
+                                    <mat-select multiple (input)="searchAuthor()" formControlName="author_id" matInput>
+                                     <div *ngFor="let author of authorsList">
+                                     <mat-option value="{{author.author_id}}">{{ author.full_name_c }}</mat-option>
+                                   </div>
+                                    </mat-select>
+                                  </mat-form-field>
+
+                            <!--    <input type="text" [(ngModel)]="clips.clip_url" class="form-control mt-1" id="linkPath"
+                                    name="linkPath" required #name="ngModel" placeholder="Патека"> -->
+
+                                    <mat-form-field appearance="outline" style="width: 100%;">
+                                        <mat-label>Патека</mat-label>
+                                        <input formControlName="clip_url" matInput>
+                                      </mat-form-field>
+                                      <form [formGroup]="keywordForm">
+                          <!--      <textarea readonly #bye class="form-control mt-1" rows="3" id="clipKeywords"
+                                    placeholder="Клучни зборови">{{keywords}}</textarea> -->
+                                    <mat-form-field appearance="outline" style="width: 100%;">
+                                        <mat-label>Клучни зборови <span class="badge bg-primary">CTRL + Q</span></mat-label>
+                                        <textarea readonly rows=4 formControlName="keyword" matInput></textarea>
+                                      </mat-form-field>
+                                    </form>
+                              <!--  <textarea readonly #bye class="form-control mt-1" rows="2"></textarea> -->
+                              <mat-form-field appearance="outline" style="width: 100%;">
+                                <textarea readonly rows=2  matInput></textarea>
+                              </mat-form-field>
+                            </div>
+                        </div>
+                    </label>
+                </div>
+            </div>
+
+            <div class="flex items-center  pl-1 mr-4 ml-4">
+              <!--  <span>Бројка на кластер</span>
+                <input type="text" id="start" name="trip-start" value=""
+                    class="text-skyblue-600 form-control focus:border-skyblue-400 focus:outline-none focus:shadow-outline-skyblue"> -->
+                    <mat-form-field appearance="outline" style="width: 100%;">
+                        <mat-label>Бројка на кластер</mat-label>
+                        <input formControlName="clip_url" matInput>
+                      </mat-form-field>   
+
+                <div class="flex items-center mt-1 ml-4">
+                <!--    <button style="font-size: 13px;"
+                        class="flex items-center justify-between ml-2 px-2 py-1 text-sm small leading-5 text-skyblue-100 transition-colors duration-150 bg-skyblue-600 border border-transparent rounded-lg active:bg-skyblue-600 hover:bg-skyblue-700 focus:outline-none focus:shadow-outline-skyblue">
+                        grid.mk </button>
+                    <button style="font-size: 13px;"
+                        class="flex items-center justify-between ml-2 px-2 py-1 text-sm small leading-5 text-skyblue-100 transition-colors duration-150 bg-skyblue-600 border border-transparent rounded-lg active:bg-skyblue-600 hover:bg-skyblue-700 focus:outline-none focus:shadow-outline-skyblue">
+                        vesti.mk</button>
+                    <button style="font-size: 13px;"
+                        class="flex items-center justify-between ml-2 px-2 py-1 text-sm font-medium leading-5 text-skyblue-100 transition-colors duration-150 bg-skyblue-600 border border-transparent rounded-lg active:bg-skyblue-600 hover:bg-skyblue-700 focus:outline-none focus:shadow-outline-skyblue">
+                        fax.al</button>
+                    <button style="font-size: 13px;"
+                        class="flex items-center justify-between ml-2 px-2 py-1 text-sm font-medium leading-5 text-skyblue-100 transition-colors duration-150 bg-skyblue-600 border border-transparent rounded-lg active:bg-skyblue-600 hover:bg-skyblue-700 focus:outline-none focus:shadow-outline-skyblue">
+                        time.mk</button> -->
+                        <button style="margin-left: 3%" mat-raised-button color="primary" >grid.mk</button>
+                        <button style="margin-left: 3%" mat-raised-button color="primary" > vesti.mk</button>
+                        <button style="margin-left: 3%" mat-raised-button color="primary" >fax.al</button>
+                        <button style="margin-left: 3%" mat-raised-button color="primary" >time.mk</button>
+                </div>
+            </div>
+
+        </form>
+    </div>
+</div>
+

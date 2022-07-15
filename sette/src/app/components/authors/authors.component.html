@@ -1,0 +1,68 @@
+<app-header></app-header>
+
+<div class="flex items-center">
+  <div class="row">
+    <div class="col-sm-4" style="margin-top: 9%;">
+      <div class="flex-1 max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl">
+        <div class="div-1 flex items-center justify-center p-6 sm:p-12">
+          <div class=" w-full">
+            <h3 class="mb-4 text-xl font-semibold text-gray-700">
+              ДОДАДЕТЕ АВТОР
+            </h3>
+      <!--      <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+              <label class="block text-sm">
+                <span class="text-gray-700 dark:text-gray-400">Име и Презиме на кирилица</span>
+                <input type="text" [(ngModel)]="authors.full_name_c" class="form-control" id="namecyrilic"
+                  name="namecyrilic" required #name="ngModel"
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" />
+              </label>
+              <label class="block mt-4 text-sm">
+                <span class="text-gray-700 dark:text-gray-400">Име и Презиме на латиница</span>
+                <input type="text" [(ngModel)]="authors.full_name_l" class="form-control" id="namelatin"
+                  name="namelatin" required #name="ngModel"
+                  class="block w-full mt-1 text-sm dark:border-gray-600 dark:bg-gray-700 focus:border-purple-400 focus:outline-none focus:shadow-outline-purple dark:text-gray-300 dark:focus:shadow-outline-gray form-input" />
+              </label>
+              <button id="submit" type="submit"
+                class="block px-4 py-2 mt-4 text-sm font-medium leading-5 text-center text-white transition-colors duration-150 bg-skyblue-600 border border-transparent rounded-lg active:bg-skyblue-600 hover:bg-skyblue-700 focus:outline-none focus:shadow-outline-skyblue">Додај
+                Автор</button>
+              </form> -->
+              <form [formGroup]="authorForm">
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Име и презиме на кирилица</mat-label>
+                <input formControlName="full_name_c" matInput>
+              </mat-form-field>
+              <mat-form-field appearance="outline" style="width: 100%;">
+                <mat-label>Име и презиме на латиница</mat-label>
+                <input formControlName="full_name_l" matInput>
+              </mat-form-field>
+              </form>
+              <button *ngIf="editMode == false" mat-raised-button color="primary" (click)="addAuthor()">Додади автор</button> 
+              <div *ngIf="editMode == true">
+              <button style="margin-left: 2%" mat-raised-button color="primary" (click)="editAuthor(authorID); editMode = false" >Измени</button> 
+              <button style="margin-left: 2%" mat-raised-button color="primary" (click)="editMode = false; this.resetForm();" >Откажи Измени</button> 
+              <button style="margin-left: 2%" mat-raised-button color="warn" (click)="deleteAuthor(authorID, authorName)" >Избриши</button>
+            </div> 
+          </div>
+        </div>
+      </div>
+    </div>
+
+   
+    <div class="col-sm-8" style="margin-top: 3%;">
+      <div class="container">
+      <h2 style="text-align: center;">Автори</h2>
+      <div style="margin-left: 3%;">
+        Пребарај <input type="next" name="searchString" [(ngModel)]="searchString">
+      </div>
+      <br>
+      <div class="row" style="margin-right: 2%">
+        <div *ngFor="let author of authorsList.slice().reverse() | filterAll: searchString" class="col-sm-12 col-md-6 col-lg-4 col-xl-3 text-sm" style="margin-top: 1%; padding: 0px 2px;"
+          style="margin-top: 1%;">
+          <button (click)="authorName = author.full_name_c; authorID = author.author_id; loadAuthor(author.full_name_l, author.full_name_c); editMode = true" style="height:2rem;width: 100%;" class=" bg-sette" >
+            <p class="ml-2 mt-1 text-p bg-sette">{{ author.full_name_c}} / {{ author.full_name_l }}</p>
+          </button>
+        </div>
+    </div>
+    </div>
+  </div>
+</div>

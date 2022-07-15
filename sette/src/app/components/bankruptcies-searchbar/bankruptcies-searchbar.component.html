@@ -1,0 +1,46 @@
+<header class="z-10 py-4 ml-40% mt-3" style="margin-left:25%;">
+    <div class="container flex items-center justify-between h-full px-6 mx-auto text-skyblue-600" >
+        <!-- Search input -->
+        <div class=" flex justify-start">
+            <div class="relative w-full max-w-xl mr-3  focus-within:text-skyblue-500">
+                <div class="absolute inset-y-0 flex items-center pl-2 bg-sette">
+                    <label class="flex items-center pl-2 bg-sette ">
+                        <label class="flex items-center pl-2" style="padding-top: 0%; padding-bottom: 0%; margin-bottom: 0%;margin-top: 0%;" >
+                            <span class="mr-2">Од</span>
+                            <mat-form-field>
+                                <input #from matInput [matDatepicker]="datepickerRef" name="datepicker" ngModel
+                                    #dateCtrl="ngModel" required readonly />
+                                <mat-datepicker-toggle [for]="datepickerRef" matSuffix></mat-datepicker-toggle>
+                                <mat-datepicker #datepickerRef></mat-datepicker>
+                                <mat-error *ngIf="dateCtrl.errors?.[required] && deptCtrl.touched">Choose a Date
+                                </mat-error>
+                            </mat-form-field>
+                        </label>
+                        <label class="flex items-center pl-2">
+                            <span class="mr-2 ml-4">До</span>
+                            <mat-form-field>
+                                <input #to matInput [matDatepicker]="datepickerRef1" name="datepicker1" ngModel
+                                    #dateCtrl="ngModel" required readonly />
+                                <mat-datepicker-toggle [for]="datepickerRef1" matSuffix></mat-datepicker-toggle>
+                                <mat-datepicker #datepickerRef1></mat-datepicker>
+                                <mat-error *ngIf="dateCtrl.errors?.[required] && deptCtrl.touched">Choose a Date
+                                </mat-error>
+                            </mat-form-field>
+                        </label>
+                        <button (click)="filterDates(from.value,to.value)"
+                            type="button"
+                            class="flex items-center justify-between w-full mr-2 ml-4 px-2 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-skyblue-600 border border-transparent rounded-lg active:bg-skyblue-600 hover:bg-skyblue-700 focus:outline-none focus:shadow-outline-skyblue">
+                            Прикажи
+                        </button>
+                        <label class="flex items-ri pl-2 ml-4">
+                            <div size="10" >Пребарај </div>
+                            <div style="margin-left: 5%">
+                                <input type="next" [(ngModel)]="title" (input)="Search()">
+                            </div>
+                        </label>
+                    </label>
+                </div>
+            </div>
+        </div>
+    </div>
+</header>

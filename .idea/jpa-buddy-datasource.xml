@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="JpbDataSourceConfig">
+    <data-sources>
+      <data-source id="9e5025a9-dcd8-4606-8afe-d1fabd8d949a" name="sette_clipping" url="jdbc:postgresql://localhost/sette_clipping" driverClass="org.postgresql.Driver" />
+    </data-sources>
+  </component>
+</project>

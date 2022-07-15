@@ -1,0 +1,113 @@
+<app-header></app-header>
+
+<div class="row">
+    <div class="col-md-4 mt-3">
+        <div class="flex-1 max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl">
+            <div class="div-1 flex items-center justify-center p-6 sm:p-12">
+                <div class=" w-full">
+                    <h3 class="mb-3 text-xl font-semibold text-gray-700" style="text-align: center;">
+                        Корисници
+                    </h3>
+                    <div class="container">
+                        <form [formGroup]="userForm">
+                            <mat-form-field appearance="outline" style="width: 100%;">
+                                <mat-label>Име</mat-label>
+                                <input formControlName="user_name" matInput>
+                              </mat-form-field>
+                              <mat-form-field appearance="outline" style="width: 100%;">
+                                <mat-label>Корисничко Име</mat-label>
+                                <input formControlName="user_username" matInput>
+                              </mat-form-field>
+                              <mat-form-field appearance="outline" style="width: 100%;">
+                                <mat-label>Лозинка</mat-label>
+                                <input type="password" formControlName="user_password" matInput>
+                              </mat-form-field>
+                              <hr>
+                              <div class="row">
+                                <div class="col-sm-4">
+                              <mat-checkbox color="primary" [checked]="allowClips" #aClips fromControlName="allow_clips" matInput >Клип</mat-checkbox>  
+                                </div> 
+                                <div class="col-sm-4">
+                              <mat-checkbox color="primary" [checked]="allowBankruptcies" #aBankruptcies fromControlName="allow_bankruptcies" >Стечаи</mat-checkbox> 
+                                </div>
+                                <div class="col-sm-4">  
+                              <mat-checkbox color="primary" [checked]="allowTenders" #aTenders fromControlName="allow_tenders" >Тендери</mat-checkbox> 
+                            </div>  
+                            </div>
+                             <div class="row">
+                              <div class="col-sm-4">  
+                              <mat-checkbox color="primary" [checked]="allowNotifications" #aNotifications fromControlName="allow_notifications" >Известувања</mat-checkbox> 
+                            </div>
+                            <div class="col-sm-4">  
+                              <mat-checkbox color="primary" [checked]="allowSales" #aSales fromControlName="allow_sales" >Продажби</mat-checkbox> 
+                            </div>
+                            <div class="col-sm-4">  
+                              <mat-checkbox color="primary" [checked]="allowMediums" #aMediums fromControlName="allow_mediums" >Медиуми</mat-checkbox> 
+                            </div>
+                            </div>
+                             <div class="row">
+                              <div class="col-sm-4">  
+                              <mat-checkbox color="primary" [checked]="allowAuthors" #aAuthors fromControlName="allow_authors" >Автори</mat-checkbox> 
+                            </div>
+                            <div class="col-sm-4"> 
+                              <mat-checkbox color="primary" [checked]="allowTags" #aTags fromControlName="allow_tags" >Тагови</mat-checkbox> 
+                            </div>
+                            <div class="col-sm-4"> 
+                              <mat-checkbox color="primary" [checked]="allowClients" #aClients fromControlName="allow_clients" >Клиенти</mat-checkbox> 
+                            </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-sm-4">  
+                                <mat-checkbox color="primary" [checked]="allowSocials" #aSocials fromControlName="allow_socials" >Социјални</mat-checkbox> 
+                              </div>
+                              <div class="col-sm-4"> 
+                                <mat-checkbox color="primary" [checked]="allowAdministrators" #aAdministrators fromControlName="allow_administrators" >Администратори</mat-checkbox> 
+                              </div>
+                              </div>
+                              <hr>
+                        </form>
+                        <button *ngIf="editMode == false" style="margin-top: 2%" mat-raised-button color="primary" 
+                              (click)="addUser(aClips.checked, aBankruptcies.checked, aTenders.checked, aNotifications.checked, aSales.checked,
+                              aMediums.checked, aAuthors.checked, aTags.checked, aClients.checked, aSocials.checked, aAdministrators.checked);
+                              ">Додади корисник</button>
+                              <div *ngIf="editMode == true">
+                              <button style="margin-left: 2%" mat-raised-button color="primary" 
+                              (click)="editMode = false; editUser(userID, aClips.checked, aBankruptcies.checked, aTenders.checked, aNotifications.checked, aSales.checked,
+                              aMediums.checked, aAuthors.checked, aTags.checked, aClients.checked, aSocials.checked, aAdministrators.checked);">Измени</button> 
+                              <button style="margin-left: 2%" mat-raised-button color="primary" 
+                              (click)="editMode = false; resetForm(); ">Откажи Измени</button> 
+                              <button style="margin-left: 2%" mat-raised-button color="warn" 
+                              (click)="deleteUser(userID, userName);" >Избриши</button> 
+                            </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-8">
+        <div class="flex items-center" style="margin-top:8%; margin-bottom:4%">
+            <mat-form-field appearance="outline" style="width: 50%; margin-left: 4%; margin-top: 1%">
+                <mat-label>Пребарај</mat-label>
+                <input matInput type="next" name="searchString" [(ngModel)]="searchString">
+              </mat-form-field>
+              <button (click)="selectAllUsers()" style="margin-left: 2%" mat-raised-button color="primary" >Означи ги сите</button>
+              <button (click)="deleteMultipleUsers()" style="margin-left: 2%" mat-raised-button color="warn" >Избриши</button>
+          </div>
+        
+        <div class="row" style="margin-left: 1%; margin-right: 1%;">
+            <div *ngFor="let user of usersList.slice().reverse() | filterAll: searchString" class="mt-1">
+                <button style="height:35px;width:100%;margin-left: 2%" class=" bg-sette col-sm-6"
+                (click)=" editMode = true; userID = user.user_id; userName = user.user_name;
+                loadUsers(user.user_name, user.user_username, user.user_password, user.allow_clips, user.allow_tenders, 
+                          user.allow_bankruptcies, user.allow_sales, user.allow_notifications, user.allow_mediums, user.allow_authors,
+                          user.allow_tags, user.allow_clients, user.allow_socials, user.allow_administrators);">
+                    <div class="flex items-center">
+                        <mat-checkbox (click)="selectUsers(user.user_id)" [checked]="selectAll" color="primary" class="ml-1" style="margin-top: 1%"></mat-checkbox>
+                        <div class="card-text ml-4 mt-1">{{ user.user_name }}</div>
+                    </div>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,74 @@
+<header class="z-10 py-4 ml-4">
+  <div class="container flex items-center justify-between h-full px-6 mx-auto text-skyblue-600">
+    <!-- Mobile hamburger -->
+    <button class="p-1 ml-1 rounded-md md:hidden focus:outline-none focus:shadow-outline-skyblue" click="toggleSideMenu"
+      aria-label="Menu">
+      <svg class="w-6 h-6" aria-hidden="true" fill="currentColor" viewBox="0 0 20 20">
+        <path fill-rule="evenodd"
+          d="M3 5a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 10a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zM3 15a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1z"
+          clip-rule="evenodd"></path>
+      </svg>
+    </button>
+    <!-- Search input -->
+    <div class="div-1 flex justify-start flex-1">
+      <div class="relative w-full max-w-xl mr-3  focus-within:text-skyblue-500">
+        <div class="absolute inset-y-0 flex items-center pl-2">
+          <label class="flex items-center pl-2">
+            <input type="checkbox"
+              class="text-skyblue-600 form-checkbox focus:border-skyblue-400 focus:outline-none focus:shadow-outline-skyblue">
+            <span class="mr-2 ml-1"> Тендери </span>
+          </label>
+          <label class="flex items-center dark:text-gray-400 pl-2">
+            <input type="checkbox"
+              class="text-skyblue-600 form-checkbox focus:border-skyblue-400 focus:outline-none focus:shadow-outline-skyblue">
+            <span class="mr-2 ml-1"> Прилози </span>
+          </label>
+          <label class="flex items-center dark:text-gray-400 pl-2">
+            <input type="checkbox"
+              class="text-skyblue-600 form-checkbox focus:border-skyblue-400 focus:outline-none focus:shadow-outline-skyblue">
+            <span class="mr-2 ml-1"> Поништувања </span>
+          </label>
+
+          <label class="flex items-center pl-2">
+            <span class="mr-2">Од</span>
+            <mat-form-field>
+              <input #from matInput [matDatepicker]="datepickerRef" name="datepicker" ngModel #dateCtrl="ngModel"
+                required readonly />
+              <mat-datepicker-toggle [for]="datepickerRef" matSuffix></mat-datepicker-toggle>
+              <mat-datepicker #datepickerRef></mat-datepicker>
+              <mat-error *ngIf="dateCtrl.errors?.[required] && deptCtrl.touched">Choose a Date</mat-error>
+            </mat-form-field>
+          </label>
+          <label class="flex items-center pl-2">
+            <span class="mr-2">До</span>
+            <mat-form-field>
+              <input #to matInput [matDatepicker]="datepickerRef1" name="datepicker1" ngModel #dateCtrl="ngModel"
+                required readonly />
+              <mat-datepicker-toggle [for]="datepickerRef1" matSuffix></mat-datepicker-toggle>
+              <mat-datepicker #datepickerRef1></mat-datepicker>
+              <mat-error *ngIf="dateCtrl.errors?.[required] && deptCtrl.touched">Choose a Date</mat-error>
+            </mat-form-field>
+          </label>
+          <button (click)="filterDates(from.value,to.value)" style="margin-left: 2%; " type="button"
+            class="flex items-center justify-between w-full mr-2 px-2 py-1 text-sm font-medium leading-5 text-white transition-colors duration-150 bg-skyblue-600 border border-transparent rounded-lg active:bg-skyblue-600 hover:bg-skyblue-700 focus:outline-none focus:shadow-outline-skyblue">
+            Прикажи
+          </button>
+          <label class="flex items-center pl-2">
+            <div style="margin-left: 5%">Пребарај </div>
+            <div style="margin-left: 5%">
+              <input type="next" size="14" [(ngModel)]="title" (input)="Search()">
+            </div>
+          </label>
+        </div>
+      </div>
+      <div class="absolute inset-y-0 flex items-center pl-2">
+
+      </div>
+      <div class="flex mt-6 text-sm">
+
+      </div>
+
+    </div>
+  </div>
+
+</header>

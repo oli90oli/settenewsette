@@ -1,0 +1,67 @@
+<div class="grid gap-6 mb-8" style="font-size: 10px;">
+    <div class="min-w-0 p-4 bg-white rounded-lg shadow-xs">
+        <form (ngSubmit)="onSubmit()" #userForm="ngForm">
+            <div class="container">
+                <div class="row">
+                    <label class="flex items-top pl-2">
+
+                        <div class="col-md-6">
+                            <label class="flex items-center">
+                                <select (input)="searchMedium()" [(ngModel)]="mediumTitle"
+                                    (change)="selectChangeHandler($event)"
+                                    class="block text-sm w-full form-select focus:border-skyblue-400 focus:outline-none focus:shadow-outline-skyblue">
+                                    <option selected>Избери Медиум</option>
+                                    <option *ngFor="let medium of mediumsList">
+                                        {{medium.medium_name_cyrilic}}
+                                    </option>
+                                </select>
+                                <span class="ml-1 mr-2">Датум</span>
+                                <input type="date" [(ngModel)]="clips.date_of_clip" class="form-control" id="dateClip"
+                                    name="dateClip" required #name="ngModel">
+                            </label>
+                            <input type="text" [(ngModel)]="clips.clip_title" class="form-control" id="clipTitle"
+                                name="clipTitle" required #name="ngModel" placeholder="Наслов">
+                            <textarea #hi (keydown.control.q)="getSelectedKeyword($event, bye.value)"
+                                (input)="searchKeyword(hi.value, bye.value)"
+                                (click)="searchKeyword(hi.value, bye.value)" class="form-control mt-2" rows="9"
+                                id="clipText" [(ngModel)]="clips.clip_text" name="clipText" required #name="ngModel"
+                                placeholder="Текст"></textarea>
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" value="" id="clipImportantInformation">
+                                <label class="form-check-label mt-1" for="clipImportantInformation">
+                                    Важна Информација
+                                </label>
+                            </div>
+                            <button id="submit" type="submit" class="btn btn-primary center mt-2 mb-3 ml-10%">Зачувај
+                                Клип</button>
+                        </div>
+
+
+                        <div class="col-md-6 mb-2">
+                            <div class="form-group">
+                                <input type="text" [(ngModel)]="clips.clip_url" class="form-control mb-2" id="linkPath"
+                                name="linkPath" required #name="ngModel" placeholder="Патека">
+                                <textarea class="form-control mt-2" rows="5" id="clipBrief" [(ngModel)]="clips.brief"
+                                    name="clipBrief" required #name="ngModel" placeholder="Бриф">
+                                </textarea>
+                                <select (input)="searchAuthor()" [(ngModel)]="authorTitle"
+                                    (change)="selectChangeHandler($event)"
+                                    class="block text-sm mt-3 form-select focus:border-skyblue-400 focus:outline-none focus:shadow-outline-skyblue ">
+                                    <option selected>Избери Автор</option>
+                                    <option *ngFor="let author of authorsList">
+                                        {{author.full_name_c}}
+                                    </option>
+                                </select>
+                            </div>
+                            <textarea readonly #bye class="form-control mt-2" rows="2"></textarea>
+                        </div>
+
+                    </label>
+                </div>
+            </div>
+
+  
+
+    </form>
+</div>
+</div>

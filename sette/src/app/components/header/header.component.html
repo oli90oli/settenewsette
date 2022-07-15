@@ -1,0 +1,26 @@
+<div class="row">
+    <div class="col-md-3 bg-sette">
+        <img src="../assets/img/logo.png" class="object-cover ml-3" alt="SETTE" width="250">
+    </div>
+    <div class="col-md-8 bg-sette">
+    </div>
+    <div class="col-md-1 bg-sette">
+       <div class="btn-group right">
+            <div class="dropdown">
+                <button class="btn btn-secondary dropdown-toggle dropdown-toggle-split mt-3 mr-4">
+                    <i class="fa fa-bars"></i>
+                </button>
+                <div class="dropdown-content">
+                    <a href="">Клип</a>
+                    <a href="/mediums">Медиум</a>
+                    <a href="/tags">Таг</a>
+                    <a href="/authors">Автор</a>
+                    <a href="/clients">Клиент</a>
+                    <a href="/users">Корисници</a>
+                </div>
+            </div>
+        <button (click)=logOut() *ngIf="authService.isUserLoggedIn()" class="btn btn-danger mt-3"
+            style="float: right;" routerLink="/admin-login" title="Одјави се"><i class ="fa fa-sign-out" style="font-size:22px"></i></button>
+    </div>
+</div>
+</div> 
